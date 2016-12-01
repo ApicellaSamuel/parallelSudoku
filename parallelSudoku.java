@@ -9,12 +9,12 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class parallelSudoku {
     public static void main(String[] args){
-        readInput input = new readInput("input.text");
+        readInput input = new readInput("input.txt");
         parallelMatrix matrix = new parallelMatrix(input.read());
-        resolve(matrix);
+        System.out.println(resolve(matrix));
     }
-    static final ForkJoinPool fjPool = new ForkJoinPool();
-    static int resolve(parallelMatrix matrix) {
+    private static final ForkJoinPool fjPool = new ForkJoinPool();
+    private static int resolve(parallelMatrix matrix) {
         resolveSudoku sdk = new resolveSudoku(matrix);
         return fjPool.invoke(sdk);
     }
