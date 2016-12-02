@@ -39,7 +39,7 @@ public class resolveSudoku extends RecursiveTask<Integer> {
             for (int n = 1; n < 10; n++)
                 if(matrix.check(n, choicesRow, choicesColumn))
                     stack.push(new Move(n, choicesRow, choicesColumn));
-            //System.out.println("ok");
+
             if(stack.isEmpty()) {
                 if (matrix.isEnd()) {
                     globalCount++;
