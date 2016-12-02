@@ -45,26 +45,21 @@ public class resolveSudoku extends RecursiveTask<Integer> {
                     globalCount++;
                 }
             }else{
-                resolveSudoku ret=null;
-                while (!stack.isEmpty()) {
+                List<ForkJoinTask<Integer>> ret = new ArrayList<>();
+
+                while (!stack.isEmpty()){
                     Move move = stack.pop();
                     Integer[][] copyMat = matrix.matrixCopy();
                     matrix.put(move.number, move.row, move.column);
-                    ret = new resolveSudoku(matrix);
-                    ret.fork();
+                    ret.add(new resolveSudoku(matrix).fork());
                     matrix = new parallelMatrix(copyMat);
                 }
-                //System.out.println("ok");
-                globalCount += ret.join();
+
+                for(ForkJoinTask<Integer> rSDK : ret)//ForkJoinTask.invokeAll(ret))
+                    globalCount += rSDK.join();
+                //ret.forEach((task) -> (globalCount += task.join())); //foreach al contrario del for non rispetta l'ordine(meglio, però non funziona :( )
                 }
-            /*
-                SumArray left = new SumArray(arr,lo,(hi+lo)/2);
-                SumArray right= new SumArray(arr,(hi+lo)/2,hi);
-                left.fork();
-                int rightAns = right.compute();
-                int leftAns = left.join();
-                return leftAns + rightAns;
-            */
+
             return globalCount;
         }
 }
