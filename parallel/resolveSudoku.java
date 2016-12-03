@@ -1,9 +1,10 @@
+package parallel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by sam on 01/12/16.
@@ -14,9 +15,8 @@ public class resolveSudoku extends RecursiveTask<Integer> {
     //private static AtomicInteger globalCount=new AtomicInteger(0);
     private Integer globalCount = 0;
 
-        resolveSudoku(parallelMatrix matrix) {
+        public resolveSudoku(parallelMatrix matrix) {
             this.matrix = matrix;
-
         }
         protected Integer compute(){
             int min=10;
@@ -27,15 +27,17 @@ public class resolveSudoku extends RecursiveTask<Integer> {
                 for (int column = 0; column < 9; column++)
                     if(matrix.isEmpty(row, column)){
                         for (int n = 1; n < 10; n++)
-                            if(matrix.check(n, row, column))
+                            if(matrix.check(n, row, column)){
                                 momentCount++;
+                                }
+                        // se è il minimo aggiorno le coordinate della casella da scegliere
                         if(momentCount < min){
                             min = momentCount;
                             choicesRow=row;choicesColumn=column;
                         }
                         momentCount=0;
                     }
-
+            //push delle mosse
             for (int n = 1; n < 10; n++)
                 if(matrix.check(n, choicesRow, choicesColumn))
                     stack.push(new Move(n, choicesRow, choicesColumn));
@@ -52,12 +54,12 @@ public class resolveSudoku extends RecursiveTask<Integer> {
                     Integer[][] copyMat = matrix.matrixCopy();
                     matrix.put(move.number, move.row, move.column);
                     ret.add(new resolveSudoku(matrix).fork());
+                    countSolvers.increment();
                     matrix = new parallelMatrix(copyMat);
                 }
 
-                for(ForkJoinTask<Integer> rSDK : ret)//ForkJoinTask.invokeAll(ret))
+                for(ForkJoinTask<Integer> rSDK : ret)
                     globalCount += rSDK.join();
-                //ret.forEach((task) -> (globalCount += task.join())); //foreach al contrario del for non rispetta l'ordine(meglio, però non funziona :( )
                 }
 
             return globalCount;

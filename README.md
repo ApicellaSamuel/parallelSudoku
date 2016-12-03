@@ -1,2 +1,2 @@
-# parallelSudoku
-Sudoku risolto utilizzando il paradigma fork-join
+# sudokuMain
+//da elaborare

@@ -1,3 +1,5 @@
+package parallel;
+
 import java.util.Objects;
 
 public class Move {

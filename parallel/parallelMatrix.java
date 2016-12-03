@@ -1,9 +1,13 @@
+package parallel;
+
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by sam on 01/12/16.
+ *
  */
 public class parallelMatrix {
 
@@ -11,7 +15,7 @@ public class parallelMatrix {
     private int[][] caratteristicMatrix = new int[9][9];
     private HashMap<Integer, HashSet<Integer>> quadrants = new HashMap<>();
 
-    public parallelMatrix(String fileName){
+    /*public parallelMatrix(String fileName){
         readInput r = new readInput(fileName);
         this.matrix = r.read();
         for(int i = 1; i < 10; i++)
@@ -26,7 +30,8 @@ public class parallelMatrix {
                 }
             }
         }
-    }public parallelMatrix(Integer[][] matrix){
+    }*/
+    public parallelMatrix(Integer[][] matrix){
         this.matrix=matrix;
         for(int i = 1; i < 10; i++)
             this.quadrants.put(i, new HashSet<>());
@@ -46,7 +51,7 @@ public class parallelMatrix {
      * @param n il numero di cui si vuole controllare se è possibile inserirlo
      * @param row la riga
      * @param column la colonna
-     * @return true se il numero può essere inserito rispettando le regole del sudoku, false altrimenti
+     * @return true se il numero può essere inserito rispettando le regole del sequentialSudoku, false altrimenti
      */
 
     //è possibile metterlo?
@@ -57,11 +62,38 @@ public class parallelMatrix {
         return !this.quadrantsHandler(n, row, column, false);//se non lo contiene return true;
     }
 
+    public BigInteger searchSpace() {
+        BigInteger count = new BigInteger("0"); BigInteger searchSpace= new BigInteger("1");
+        for (int row = 0; row < 9; row++)
+            for (int column = 0; column < 9; column++)
+                if (this.matrix[row][column] == 0) {
+                    for (int n = 1; n < 10; n++) {
+                        if (this.check(n, row, column)) {
+                            count = count.add(new BigInteger("1"));
+                        }
+                    }
+                    searchSpace = searchSpace.multiply(count);
+                    count = new BigInteger("0");
+                }
+        return searchSpace;
+        }
+
+        public void printEmptyCellsAndFillFactor(){
+            int countCells = 0;
+            for (int row = 0; row < 9; row++)
+                for (int column = 0; column < 9; column++)
+                    if (this.matrix[row][column] == 0) {
+                        countCells++;
+                    }
+            System.out.println("empty cells: " + countCells);
+            System.out.println("fill factor: " + ( 100 * ( 81 - countCells ) ) / 81 + "%");
+        }
+
     /**
      * @param row la riga
      * @param column la colonna
      * @return l'insieme dei numeri che possono essere messi in {@code row} e {@code column}
-     *         rispettando le proprietà del sudoku
+     *         rispettando le proprietà del sequentialSudoku
      */
 
     public Set legalNumbers(int row, int column){
@@ -83,8 +115,8 @@ public class parallelMatrix {
      * @param n il numero da inserire
      * @param row la riga
      * @param column la colonna
-     * @return false se il numero non è stato inserito perchè non rispetta le regole del sudoku
-     *         oppure true se il numero è stato inserito rispettando le regole del sudoku
+     * @return false se il numero non è stato inserito perchè non rispetta le regole del sequentialSudoku
+     *         oppure true se il numero è stato inserito rispettando le regole del sequentialSudoku
      */
 
     public boolean put(int n, int row, int column){
@@ -171,32 +203,5 @@ public class parallelMatrix {
         }
         return matrixToReturn;
     }
-    /*@Override
-    public boolean equals(Object x){
-        if(x != null && x.getClass() == this.getClass() ){
-            Integer[][] mat = ((Matrix)x).matrixCopy();
-            for(int i = 0; i < 9; i++){
-                for(int j = 0; j < 9; j++){
-                    if(!this.matrix[i][j].equals(mat[i][j])) return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public int hashCode() {
-        Integer[] arrayNumbers = new Integer[81];
-        int count=0;
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                arrayNumbers[count]=this.matrix[i][j];
-                count++;
-            }
-        }
-        return Objects.hash(arrayNumbers);
-    }*/
 
 }
