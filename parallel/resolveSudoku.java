@@ -12,7 +12,6 @@ import java.util.concurrent.RecursiveTask;
  */
 public class resolveSudoku extends RecursiveTask<Integer> {
     private parallelMatrix matrix;
-    //private static AtomicInteger globalCount=new AtomicInteger(0);
     private Integer globalCount = 0;
 
         public resolveSudoku(parallelMatrix matrix) {
