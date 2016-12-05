@@ -7,12 +7,12 @@ import java.util.concurrent.RecursiveTask;
  * Created by sam on 01/12/16.
  *
  */
-public class resolveSudoku extends RecursiveTask<Integer> {
+public class parallelSudoku extends RecursiveTask<Integer> {
     private Matrix matrix;
     private Integer globalCount = 0;
     public static long countSolvers;
 
-        public resolveSudoku(Matrix matrix) {
+        public parallelSudoku(Matrix matrix) {
             this.matrix = matrix;
         }
         protected Integer compute(){
@@ -51,7 +51,7 @@ public class resolveSudoku extends RecursiveTask<Integer> {
                     if (matrix.check(number, choiceRow, choiceColumn)) {
                         Integer[][] copyMat = matrix.matrixCopy();
                         matrix.put(number, choiceRow, choiceColumn);
-                        ret.add(new resolveSudoku(matrix).fork());
+                        ret.add(new parallelSudoku(matrix).fork());
                         countSolvers++;
                         matrix = new Matrix(copyMat);
                     }

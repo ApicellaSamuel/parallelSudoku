@@ -55,9 +55,9 @@ public class sudokuMain {
             out.println();
         }
     }
-    private static resolveSudoku sdk;
+    private static parallelSudoku sdk;
     private static int resolveParallel(Matrix matrix) {
-        sdk = new resolveSudoku(matrix);
+        sdk = new parallelSudoku(matrix);
         return fjPool.invoke(sdk);
     }
 }
