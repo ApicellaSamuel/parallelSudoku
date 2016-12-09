@@ -20,7 +20,7 @@ public class parallelSudoku extends RecursiveTask<Integer> {
             if (matrix.isEnd())
                 return ++globalCount;
 
-            boolean CUTOFF = matrix.isEnd < 59;
+            boolean CUTOFF = matrix.isEnd < 35;
 
             List<ForkJoinTask<Integer>> ret;
             int min=10;
